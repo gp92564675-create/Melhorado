@@ -1,4 +1,3 @@
-
 import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import { TradeSignal, TradeHistory, RiskSettings } from '../models/trading.model';
 import { SupabaseService } from './supabase.service';
@@ -112,6 +111,24 @@ export class TradingService {
         this.tradeHistory.update(history => [savedTrade, ...history]);
     }
     await this.supabase.updateProfile(user, { account_balance: newBalance });
+  }
+
+  async syncWithBroker(brokerName: string) {
+    // Simulate API delay to fetch data
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Simulate fetching a new balance from the broker
+    const newBalance = Math.random() * (10000 - 500) + 500; // Random balance between $500 and $10,000
+    this.accountBalance.set(parseFloat(newBalance.toFixed(2)));
+
+    // Set connected broker status
+    this.connectBroker(brokerName);
+
+    // Persist new balance to the user's profile in the database
+    const user = this.supabase.currentUser();
+    if (user) {
+      await this.supabase.updateProfile(user, { account_balance: this.accountBalance() });
+    }
   }
   
   connectBroker(brokerName: string) {

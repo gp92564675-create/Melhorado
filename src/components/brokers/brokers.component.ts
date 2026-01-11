@@ -1,4 +1,3 @@
-
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TradingService } from '../../services/trading.service';
@@ -13,6 +12,8 @@ export class BrokersComponent {
   connectedBroker = this.tradingService.connectedBroker;
   
   showLoginModal = signal<string | null>(null);
+  isSyncing = signal<string | null>(null);
+  syncSuccess = signal<string | null>(null);
 
   brokers = [
     { name: 'Quotex', logo: 'https://images.quotex.com/symbols/quotex-white.svg', needsInvert: false },
@@ -39,11 +40,22 @@ export class BrokersComponent {
     this.showLoginModal.set(null);
   }
   
-  confirmBrokerLogin() {
+  async confirmBrokerLogin() {
     const brokerToLogin = this.showLoginModal();
     if (brokerToLogin) {
-      this.tradingService.connectBroker(brokerToLogin);
+      this.showLoginModal.set(null); // Close modal immediately
+      this.isSyncing.set(brokerToLogin);
+      try {
+        await this.tradingService.syncWithBroker(brokerToLogin);
+        // On success, show a confirmation message
+        this.syncSuccess.set(brokerToLogin);
+        setTimeout(() => this.syncSuccess.set(null), 3000); // Hide after 3s
+      } catch (error) {
+        console.error("Failed to sync with broker", error);
+        // Optional: Implement user-facing error message
+      } finally {
+        this.isSyncing.set(null);
+      }
     }
-    this.showLoginModal.set(null);
   }
 }
