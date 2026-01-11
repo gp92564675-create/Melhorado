@@ -16,8 +16,10 @@ export class SettingsComponent {
   savedMessageVisible = signal(false);
 
   constructor() {
-    // Initialize component signal with service state
-    this.settings.set(this.tradingService.settings());
+    // Sync component state with service state
+    effect(() => {
+      this.settings.set(this.tradingService.settings());
+    });
   }
 
   updateRiskPerTrade(event: Event) {
@@ -35,8 +37,8 @@ export class SettingsComponent {
     this.settings.update(s => ({ ...s, dailyStopWin: value }));
   }
 
-  saveSettings() {
-    this.tradingService.updateSettings(this.settings());
+  async saveSettings() {
+    await this.tradingService.updateSettings(this.settings());
     this.savedMessageVisible.set(true);
     setTimeout(() => this.savedMessageVisible.set(false), 3000);
   }

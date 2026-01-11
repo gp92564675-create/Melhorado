@@ -14,12 +14,19 @@
     <div class="space-y-4">
       <div>
         <label for="email" class="text-sm font-medium text-gray-300">Email</label>
-        <input type="email" id="email" class="w-full mt-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500" placeholder="voce@email.com">
+        <input type="email" id="email" name="email" [(ngModel)]="email" class="w-full mt-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500" placeholder="voce@email.com">
       </div>
       <div>
         <label for="password" class="text-sm font-medium text-gray-300">Senha</label>
-        <input type="password" id="password" class="w-full mt-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500" placeholder="••••••••">
+        <input type="password" id="password" name="password" [(ngModel)]="password" class="w-full mt-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500" placeholder="••••••••">
       </div>
+
+      @if(errorMessage()) {
+        <div class="bg-red-500/20 text-red-400 text-sm p-3 rounded-lg">
+          {{ errorMessage() }}
+        </div>
+      }
+
       <button type="button" (click)="login()" class="w-full py-3 px-4 bg-green-600 hover:bg-green-700 rounded-lg text-white font-semibold transition-colors">
         Entrar
       </button>
