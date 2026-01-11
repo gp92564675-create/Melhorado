@@ -1,0 +1,67 @@
+
+<div class="space-y-6 animate-fade-in max-w-2xl mx-auto">
+  <h2 class="text-3xl font-bold text-white">Gestão de Risco</h2>
+
+  <div class="bg-gray-800 p-8 rounded-xl space-y-6 border border-gray-700">
+    <!-- Risk per Trade -->
+    <div>
+      <label for="riskPerTrade" class="block text-sm font-medium text-gray-300">% da banca por trade (Padrão)</label>
+      <div class="flex items-center space-x-4 mt-2">
+        <input 
+          type="range" 
+          id="riskPerTrade" 
+          min="0.5" 
+          max="10" 
+          step="0.5" 
+          [value]="settings().riskPerTrade" 
+          (input)="updateRiskPerTrade($event)"
+          class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+        <span class="font-bold text-green-400 w-16 text-center">{{ settings().riskPerTrade }}%</span>
+      </div>
+       <p class="text-xs text-gray-500 mt-2">Define o valor padrão sugerido ao abrir uma operação.</p>
+    </div>
+    
+    <!-- Stop Loss -->
+    <div>
+      <label for="stopLoss" class="block text-sm font-medium text-gray-300">Stop loss diário (% da banca)</label>
+      <div class="flex items-center space-x-4 mt-2">
+        <input 
+          type="range" 
+          id="stopLoss" 
+          min="1" 
+          max="20" 
+          step="1" 
+          [value]="settings().dailyStopLoss"
+          (input)="updateStopLoss($event)"
+          class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+        <span class="font-bold text-red-400 w-16 text-center">{{ settings().dailyStopLoss }}%</span>
+      </div>
+    </div>
+    
+    <!-- Stop Win -->
+    <div>
+      <label for="stopWin" class="block text-sm font-medium text-gray-300">Stop win diário (% da banca)</label>
+      <div class="flex items-center space-x-4 mt-2">
+        <input 
+          type="range" 
+          id="stopWin" 
+          min="1" 
+          max="20" 
+          step="1" 
+          [value]="settings().dailyStopWin"
+          (input)="updateStopWin($event)"
+          class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+        <span class="font-bold text-green-400 w-16 text-center">{{ settings().dailyStopWin }}%</span>
+      </div>
+    </div>
+
+    <div class="pt-4 flex justify-end items-center">
+      @if(savedMessageVisible()) {
+        <span class="text-green-400 text-sm mr-4">Configurações salvas!</span>
+      }
+      <button (click)="saveSettings()" class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white font-semibold transition-colors">
+        Salvar
+      </button>
+    </div>
+  </div>
+</div>

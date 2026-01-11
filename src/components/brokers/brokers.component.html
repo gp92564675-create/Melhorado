@@ -1,0 +1,72 @@
+
+<div class="space-y-6 animate-fade-in">
+  <h2 class="text-3xl font-bold text-white">Conectar Corretora</h2>
+  <p class="text-gray-400">Selecione uma corretora para habilitar as operações com um clique.</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    @for (broker of brokers; track broker.name) {
+      <div class="bg-gray-800 rounded-xl p-6 flex flex-col items-center justify-center text-center border-2"
+           [class.border-green-500]="connectedBroker() === broker.name"
+           [class.border-gray-700]="connectedBroker() !== broker.name">
+        
+        <div class="h-16 flex items-center justify-center mb-4">
+          @if(broker.logo) {
+            <img [src]="broker.logo" [alt]="broker.name + ' Logo'" class="max-h-12 invert brightness-0">
+          } @else {
+            <span class="text-2xl font-bold">{{ broker.name }}</span>
+          }
+        </div>
+
+        <button (click)="handleConnectClick(broker.name)" 
+                class="w-full py-2 font-semibold rounded-lg transition-colors"
+                [class.bg-green-600]="connectedBroker() !== broker.name"
+                [class.hover:bg-green-700]="connectedBroker() !== broker.name"
+                [class.bg-red-600]="connectedBroker() === broker.name"
+                [class.hover:bg-red-700]="connectedBroker() === broker.name"
+                >
+          @if (connectedBroker() === broker.name) {
+            <span>Desconectar</span>
+          } @else {
+            <span>Conectar</span>
+          }
+        </button>
+
+        @if(connectedBroker() === broker.name) {
+          <div class="flex items-center space-x-2 mt-4 text-green-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span class="text-sm font-medium">Conectado</span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Broker Login Modal -->
+@if(showLoginModal(); as brokerName) {
+  <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 animate-fade-in p-4">
+    <div class="bg-gray-800 rounded-xl shadow-lg p-8 w-full max-w-md space-y-4">
+      <h3 class="text-2xl font-bold text-white">Iniciar Sessão na {{ brokerName }}</h3>
+      <p class="text-sm text-gray-400">Insira suas credenciais para conectar sua conta.</p>
+      <div class="border-t border-gray-700"></div>
+      <div class="space-y-4">
+        <div>
+          <label for="brokerEmail" class="text-sm font-medium text-gray-300">Email da Corretora</label>
+          <input type="email" id="brokerEmail" class="w-full mt-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500" placeholder="voce@email.com">
+        </div>
+        <div>
+          <label for="brokerPassword" class="text-sm font-medium text-gray-300">Senha da Corretora</label>
+          <input type="password" id="brokerPassword" class="w-full mt-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500" placeholder="••••••••">
+        </div>
+      </div>
+      <div class="flex justify-end space-x-4 pt-4">
+        <button (click)="cancelBrokerLogin()" class="px-6 py-2 rounded-lg bg-gray-600 hover:bg-gray-700 transition-colors">Cancelar</button>
+        <button (click)="confirmBrokerLogin()" class="px-6 py-2 rounded-lg text-white font-semibold bg-green-600 hover:bg-green-700">
+          Iniciar Sessão
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,88 @@
+
+<div class="space-y-6 animate-fade-in">
+  <h2 class="text-3xl font-bold text-white">Sinais Ativos</h2>
+
+  @if (activeSignals().length === 0) {
+    <div class="bg-gray-800 p-8 rounded-xl text-center">
+      <p class="text-gray-400">Procurando por sinais de alta probabilidade... Por favor, aguarde.</p>
+      <div class="mt-4 w-full bg-gray-700 rounded-full h-2.5">
+        <div class="bg-green-600 h-2.5 rounded-full animate-pulse" style="width: 75%"></div>
+      </div>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      @for (signal of activeSignals(); track signal.id) {
+        <div class="bg-gray-800 rounded-xl shadow-lg p-5 flex flex-col space-y-4 border border-gray-700 hover:border-green-500 transition-all">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="text-2xl font-bold text-white">{{ signal.asset }}</h3>
+              <p class="text-sm text-gray-400">{{ signal.timeframe }} &middot; Expira em {{ signal.expiration | date:'HH:mm:ss' }}</p>
+            </div>
+            <div 
+              class="px-3 py-1 text-sm font-bold rounded-full"
+              [class.bg-green-500/20]="signal.type === 'CALL'"
+              [class.text-green-400]="signal.type === 'CALL'"
+              [class.bg-red-500/20]="signal.type === 'PUT'"
+              [class.text-red-400]="signal.type === 'PUT'">
+              {{ signal.type }}
+            </div>
+          </div>
+          
+          <div class="text-center py-4">
+            <p class="text-sm text-green-400">Probabilidade</p>
+            <p class="text-5xl font-bold text-white">{{ signal.probability }}%</p>
+          </div>
+
+          <div class="text-xs text-gray-500">
+            Estratégia: <span class="font-medium text-gray-400">{{ signal.strategy }}</span>
+          </div>
+          
+          <div class="relative group">
+            <button (click)="startTrade(signal)" 
+              [disabled]="!connectedBroker()"
+              class="w-full py-3 font-semibold rounded-lg transition-transform duration-150 ease-in-out hover:scale-105 disabled:cursor-not-allowed disabled:bg-gray-600 disabled:hover:scale-100"
+              [class.bg-green-600]="signal.type === 'CALL'" [class.hover:bg-green-700]="signal.type === 'CALL'"
+              [class.bg-red-600]="signal.type === 'PUT'" [class.hover:bg-red-700]="signal.type === 'PUT'">
+              ENTRAR
+            </button>
+            @if(!connectedBroker()) {
+              <div class="absolute bottom-full mb-2 w-full hidden group-hover:block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-90">
+                Conecte-se a uma corretora para operar.
+                <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-gray-900"></div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- Confirmation Modal -->
+@if(confirmingSignal(); as signal) {
+  <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 animate-fade-in p-4">
+    <div class="bg-gray-800 rounded-xl shadow-lg p-8 w-full max-w-md space-y-4">
+      <h3 class="text-2xl font-bold text-white">Confirmar Operação</h3>
+      <div class="border-t border-gray-700"></div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-400">Ativo:</span>
+        <span class="font-bold text-white">{{ signal.asset }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-400">Direção:</span>
+        <span class="font-bold" [class.text-green-400]="signal.type === 'CALL'" [class.text-red-400]="signal.type === 'PUT'">{{ signal.type }}</span>
+      </div>
+       <div class="flex justify-between items-center">
+        <label for="tradeAmount" class="text-gray-400">Valor (USD):</label>
+        <input type="number" id="tradeAmount" name="tradeAmount" 
+               [value]="manualTradeAmount()"
+               (input)="onAmountChange($event)"
+               class="w-32 px-3 py-1 bg-gray-700 border border-gray-600 rounded-lg text-white text-right font-bold focus:ring-green-500 focus:border-green-500">
+      </div>
+      <div class="flex justify-end space-x-4 pt-4">
+        <button (click)="cancelTrade()" class="px-6 py-2 rounded-lg bg-gray-600 hover:bg-gray-700 transition-colors">Cancelar</button>
+        <button (click)="confirmTrade()" class="px-6 py-2 rounded-lg text-white font-semibold" [class.bg-green-600]="signal.type === 'CALL'" [class.hover:bg-green-700]="signal.type === 'CALL'" [class.bg-red-600]="signal.type === 'PUT'" [class.hover:bg-red-700]="signal.type === 'PUT'">Confirmar</button>
+      </div>
+    </div>
+  </div>
+}

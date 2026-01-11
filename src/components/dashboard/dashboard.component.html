@@ -1,0 +1,44 @@
+
+<div class="space-y-6 animate-fade-in">
+  <h2 class="text-3xl font-bold text-white">Dashboard Principal</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Account Balance -->
+    <div class="bg-gray-800 p-6 rounded-xl flex flex-col items-center justify-center space-y-2 md:col-span-2 lg:col-span-1">
+      <div class="text-4xl font-bold text-white">{{ accountBalance() | currency:'USD':'symbol':'1.2-2' }}</div>
+      <div class="text-gray-400 text-sm font-medium">SALDO DA CONTA</div>
+    </div>
+
+    <!-- Win Rate -->
+    <div class="bg-gray-800 p-6 rounded-xl flex flex-col items-center justify-center space-y-2">
+      <div class="text-5xl font-bold text-green-400">{{ winRate() | number:'1.1-2' }}%</div>
+      <div class="text-gray-400 text-sm font-medium">ASSERTIVIDADE</div>
+    </div>
+    
+    <!-- Wins -->
+    <div class="bg-gray-800 p-6 rounded-xl flex flex-col items-center justify-center space-y-2">
+      <div class="text-5xl font-bold text-green-400">{{ winCount() }}</div>
+      <div class="text-gray-400 text-sm font-medium">VITÓRIAS</div>
+    </div>
+
+    <!-- Losses -->
+    <div class="bg-gray-800 p-6 rounded-xl flex flex-col items-center justify-center space-y-2">
+      <div class="text-5xl font-bold text-red-400">{{ lossCount() }}</div>
+      <div class="text-gray-400 text-sm font-medium">DERROTAS</div>
+    </div>
+  </div>
+
+  <div class="bg-gray-800 p-6 rounded-xl">
+    <h3 class="text-xl font-semibold mb-4 text-white">Status do Mercado</h3>
+    <div class="flex items-center space-x-3">
+      <span class="relative flex h-3 w-3">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+      </span>
+      <span class="text-green-400 font-medium">Mercado Ativo - Ideal para Operar</span>
+    </div>
+    <p class="text-gray-400 mt-2 text-sm">
+      Volatilidade ideal nos pares principais. Estratégias de Confluência e Reversão estão com alta probabilidade.
+    </p>
+  </div>
+</div>
