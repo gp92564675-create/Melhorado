@@ -3,6 +3,9 @@
   "name": "edge-ai-trading-signals",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "build": "ng build"
+  },
   "dependencies": {
     "@angular/common": "^21.0.8",
     "@angular/compiler": "^21.0.8",
